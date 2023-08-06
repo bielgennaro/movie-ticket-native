@@ -1,20 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Home from "./src/home/index";
+import Settings from "./src/settings/index";
+
+const Tab = createBottomTabNavigator();
+
+const routesName = {
+  home: "Home",
+  settings: "Settings",
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName={routesName.home}
+        screenOptions={({ route }) => ({
+          tabBarStyle: { backgroundColor: "#d9232a" },
+          tabBarIcon: ({ focused, size }) => {
+            let nameIcon;
+
+            if (route.name === routesName.home) {
+              nameIcon = focused ? "home" : "home";
+            } else if (route.name === routesName.settings) {
+              nameIcon = focused ? "settings" : "settings";
+            }
+
+            return (
+              <MaterialIcons
+                name={nameIcon}
+                size={size}
+                color={focused ? "#d3d3d3" : "#ffff"}
+              />
+            );
+          },
+          tabBarShowLabel: false,
+          headerStyle: { backgroundColor: "#d9232a" },
+          headerTitleStyle: { color: "white" },
+        })}
+      >
+        <Tab.Screen name={routesName.home} component={Home} />
+        <Tab.Screen name={routesName.settings} component={Settings} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
 });

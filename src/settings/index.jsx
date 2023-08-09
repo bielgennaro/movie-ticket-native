@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-export default function index() {
+export default function Settings() {
   console.log("aaaaaa");
 
   return (

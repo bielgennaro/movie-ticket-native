@@ -3,48 +3,34 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/home/index";
 import Settings from "./src/settings/index";
+import TabNavigator from "./components/navigator";
+import MovieDetails from "./src/details/index";
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const routesName = {
-  home: "Home",
+  home: "Filmes em Cartaz",
   settings: "Settings",
 };
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName={routesName.home}
-        screenOptions={({ route }) => ({
-          tabBarStyle: { backgroundColor: "#d9232a" },
-          tabBarIcon: ({ focused, size }) => {
-            let nameIcon;
-
-            if (route.name === routesName.home) {
-              nameIcon = focused ? "home" : "home";
-            } else if (route.name === routesName.settings) {
-              nameIcon = focused ? "settings" : "settings";
-            }
-
-            return (
-              <MaterialIcons
-                name={nameIcon}
-                size={size}
-                color={focused ? "#d3d3d3" : "#ffff"}
-              />
-            );
-          },
-          tabBarShowLabel: false,
-          headerStyle: { backgroundColor: "#d9232a" },
-          headerTitleStyle: { color: "white" },
-        })}
-      >
-        <Tab.Screen name={routesName.home} component={Home} />
-        <Tab.Screen name={routesName.settings} component={Settings} />
-      </Tab.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="Tab"
+          component={TabNavigator}
+          options={{ animation: "default" }}
+        />
+        <Stack.Screen
+          name="MovieDetails"
+          component={MovieDetails}
+          options={{ animation: "slide_from_right" }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

@@ -28,7 +28,7 @@ export default function App() {
         <Stack.Screen
           name="MovieDetails"
           component={MovieDetails}
-          options={{ animation: "slide_from_right" }}
+          options={{ animation: "slide_from_bottom" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

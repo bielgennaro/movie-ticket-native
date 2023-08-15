@@ -4,10 +4,11 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "./src/home/index";
-import Settings from "./src/settings/index";
-import TabNavigator from "./components/navigator";
-import MovieDetails from "./src/details/index";
+import Home from "./src/pages/home/index";
+import Settings from "./src/pages/settings/index";
+import TabNavigator from "./src/components/navigator";
+import MovieDetails from "./src/pages/details/index";
+import { Login } from "./src/pages/login";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,11 @@ export default function App() {
         <Stack.Screen
           name="MovieDetails"
           component={MovieDetails}
+          options={{ animation: "slide_from_bottom" }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
           options={{ animation: "slide_from_bottom" }}
         />
       </Stack.Navigator>

@@ -1,13 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Home from "../../src/home/index";
-import Settings from "../../src/settings/index";
+import Home from "../../pages/home/index";
+import { Login } from "../../pages/login";
+import Settings from "../../pages/settings/index";
 
 const Tab = createBottomTabNavigator();
 
 const routesName = {
   home: "Filmes em Cartaz",
-  settings: "Settings",
+  login: "Login",
 };
 
 export default function TabNavigator() {
@@ -20,16 +21,16 @@ export default function TabNavigator() {
           let nameIcon;
 
           if (route.name === routesName.home) {
-            nameIcon = "theaters";
-          } else if (route.name === routesName.settings) {
-            nameIcon = focused ? "settings" : "settings";
+            nameIcon = focused ? "home-filled" : "home";
+          } else if (route.name === routesName.login) {
+            nameIcon = "person";
           }
 
           return (
             <MaterialIcons
               name={nameIcon}
               size={size}
-              color={focused ? "#d3d3d3" : "#ffff"}
+              color={focused ? "#b3b3b3" : "#ffff"}
             />
           );
         },
@@ -39,7 +40,7 @@ export default function TabNavigator() {
       })}
     >
       <Tab.Screen name={routesName.home} component={Home} />
-      <Tab.Screen name={routesName.settings} component={Settings} />
+      <Tab.Screen name={routesName.login} component={Login} />
     </Tab.Navigator>
   );
 }

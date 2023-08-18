@@ -15,6 +15,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useCallback, useState } from "react";
 import { Header } from "../../components/header";
 import { styles } from "./style";
+import { Button } from "../../components/button";
 
 export default function MovieDetails({ navigation }) {
   const [sessionHour, setSessionHour] = useState(null);
@@ -161,6 +162,7 @@ export default function MovieDetails({ navigation }) {
           );
         }}
       />
+      <Button type="edit" />
     </SafeAreaView>
   );
 }

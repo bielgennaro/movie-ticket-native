@@ -1,7 +1,8 @@
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import { data } from "../../helper/data";
 import { MovieCard } from "../../components/movieCard";
 import { styles } from "./style";
+import { Button } from "../../components/button";
 
 export default function Home({ navigation }) {
   return (
@@ -15,6 +16,7 @@ export default function Home({ navigation }) {
         data={data}
         keyExtractor={({ id }) => id}
       />
+      <Button onPress={() => navigation.push("MovieRegister")} type="new" />
     </SafeAreaView>
   );
 }

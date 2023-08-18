@@ -21,12 +21,16 @@ export const Fields = ({ values }) => {
       newError[fieldName] = eRegex.test(fieldValue) ? "" : "E-mail inválido";
     }
 
-    if (fieldProps.password) {
-      newError[fieldName] = fieldValue.length >= 6 ? "" : "Senha inválida";
-    }
+    // if (fieldProps.password) {
+    //   newError[fieldName] = fieldValue.length >= 6 ? "" : "Senha inválida";
+    // }
 
     if (fieldProps.required && fieldValue === "") {
       newError[fieldName] = "Campo obrigatório";
+    }
+
+    if (fieldProps.maxLength && fieldValue.length > fieldProps.maxLength) {
+      newError[fieldName] = `Máximo de ${fieldProps.maxLength} caracteres`;
     }
 
     setError(newError);

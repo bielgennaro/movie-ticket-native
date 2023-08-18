@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
     padding: 5,
   },
   buttonSave: {
-    width: "96%",
+    width: "40%",
     marginBottom: "5%",
     alignSelf: "center",
     borderRadius: 8,

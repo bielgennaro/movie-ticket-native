@@ -9,13 +9,9 @@ import Settings from "./src/pages/settings/index";
 import TabNavigator from "./src/components/navigator";
 import MovieDetails from "./src/pages/details/index";
 import { Login } from "./src/pages/login";
+import { MovieRegister } from "./src/pages/movieRegister";
 
 const Stack = createNativeStackNavigator();
-
-const routesName = {
-  home: "Filmes em Cartaz",
-  settings: "Settings",
-};
 
 export default function App() {
   return (
@@ -34,6 +30,11 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={Login}
+          options={{ animation: "slide_from_bottom" }}
+        />
+        <Stack.Screen
+          name="MovieRegister"
+          component={MovieRegister}
           options={{ animation: "slide_from_bottom" }}
         />
       </Stack.Navigator>

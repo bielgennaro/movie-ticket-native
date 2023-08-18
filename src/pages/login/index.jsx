@@ -5,10 +5,11 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Button,
+  TouchableOpacity,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { Fields } from "../../components/forms";
+import { Fields } from "../../components/fields";
+import { Button } from "../../components/button";
 
 export const Login = ({ navigation }) => {
   const values = {
@@ -29,9 +30,7 @@ export const Login = ({ navigation }) => {
       <View style={styles.viewContainer}>
         <MaterialIcons name="account-circle" size={200} color="#fff" />
         <Fields values={values} />
-        <View>
-          <Button title="Entrar" color="#d9232a" />
-        </View>
+        <Button text="Entrar" />
       </View>
     </SafeAreaView>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput, Text, StyleSheet } from "react-native";
 
 export const Fields = ({ values }) => {
@@ -21,16 +21,16 @@ export const Fields = ({ values }) => {
       newError[fieldName] = eRegex.test(fieldValue) ? "" : "E-mail inválido";
     }
 
-    // if (fieldProps.password) {
-    //   newError[fieldName] = fieldValue.length >= 6 ? "" : "Senha inválida";
-    // }
+    if (fieldProps.maxLength && fieldValue.length > fieldProps.maxLength) {
+      newError[fieldName] = `Máximo de ${fieldProps.maxLength} caracteres`;
+    }
+
+    if (fieldProps.minLength && fieldValue.length > fieldProps.minLength) {
+      newError[fieldName] = `Mínimo de ${fieldProps.minLength} caracteres`;
+    }
 
     if (fieldProps.required && fieldValue === "") {
       newError[fieldName] = "Campo obrigatório";
-    }
-
-    if (fieldProps.maxLength && fieldValue.length > fieldProps.maxLength) {
-      newError[fieldName] = `Máximo de ${fieldProps.maxLength} caracteres`;
     }
 
     setError(newError);
@@ -45,13 +45,13 @@ export const Fields = ({ values }) => {
         return (
           <React.Fragment key={fieldName}>
             <TextInput
-              placeholder={fieldProps.placeholder}
+              placeholder={fieldProps?.placeholder}
               style={styles.textInput}
               placeholderTextColor="#fff"
               onChangeText={(text) =>
                 handleFieldChange(fieldName, fieldProps, text)
               }
-              value={fieldProps.value}
+              value={fieldProps.initialValue || fieldProps.value}
               secureTextEntry={fieldProps.password}
             />
             <Text style={{ color: "red" }} key={`error[${fieldName}]`}>

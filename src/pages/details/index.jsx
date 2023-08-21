@@ -122,22 +122,11 @@ export default function MovieDetails({ navigation }) {
                   style={styles.picker}
                 />
               </View>
-              <TouchableOpacity
-                style={[
-                  styles.buttonSave,
-                  { backgroundColor: isDisabled() ? "#d923234e" : "#d92323a9" },
-                ]}
+              <Button
+                text="Salvar"
                 disabled={isDisabled()}
-              >
-                <Text
-                  style={[
-                    styles.buttonSaveText,
-                    { color: isDisabled() ? "#d3d3d3" : "#fff" },
-                  ]}
-                >
-                  Salvar
-                </Text>
-              </TouchableOpacity>
+                styleProps={{ alignSelf: "center" }}
+              />
             </>
           )
         }
@@ -162,7 +151,10 @@ export default function MovieDetails({ navigation }) {
           );
         }}
       />
-      <Button type="edit" />
+      <Button
+        type="edit"
+        onPress={() => navigation.push("MovieRegister", params)}
+      />
     </SafeAreaView>
   );
 }

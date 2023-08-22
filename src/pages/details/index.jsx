@@ -12,7 +12,7 @@ import {
   StyleSheet,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Header } from "../../components/header";
 import { styles } from "./style";
 import { Button } from "../../components/button";
@@ -23,9 +23,13 @@ export default function MovieDetails({ navigation }) {
   const [active, setActive] = useState(null);
   const route = useRoute();
   const { params } = route;
-  const maxTickets = params.avaiableTickets;
+  const [maxTickets, setMaxTickets] = useState(params.avaiableTickets);
   const discountedTicketOptions = [];
   const regularTicketOptions = [];
+
+  useEffect(() => {
+    setMaxTickets(params.avaiableTickets);
+  }, [params]);
 
   const isDisabled = () => {
     return tickets[0] === 0 && tickets[1] === 0;
@@ -35,19 +39,27 @@ export default function MovieDetails({ navigation }) {
     return tickets.reduce((sum, total) => sum + total, 0);
   }, [tickets]);
 
-  const handleRegularTicketChange = (value) => {
-    if (getTotalTickets() + value <= maxTickets) {
-      setTickets([value, tickets[1]]);
-    }
-  };
+  const handleRegularTicketChange = useCallback(
+    (value) => {
+      const remainingTickets = maxTickets - tickets[1] - value;
 
-  const handleDiscountedTicketChange = (value) => {
-    const remainingTickets = maxTickets - tickets[0];
+      if (remainingTickets >= 0) {
+        setTickets([value, tickets[1]]);
+      }
+    },
+    [tickets, maxTickets]
+  );
 
-    if (value <= remainingTickets) {
-      setTickets([tickets[0], value]);
-    }
-  };
+  const handleDiscountedTicketChange = useCallback(
+    (value) => {
+      const remainingTickets = maxTickets - tickets[0] - value;
+
+      if (remainingTickets >= 0) {
+        setTickets([tickets[0], value]);
+      }
+    },
+    [tickets, maxTickets]
+  );
 
   const onPressSessionHour = (item, index) => {
     if (active === index) {

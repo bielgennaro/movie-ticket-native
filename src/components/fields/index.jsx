@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TextInput, Text, StyleSheet } from "react-native";
 
-export const Fields = ({ values }) => {
+export const Fields = ({ values, onChangeFields }) => {
   const [fields, setFields] = useState(values);
   const [error, setError] = useState({});
 
@@ -11,6 +11,8 @@ export const Fields = ({ values }) => {
       [fieldName]: { ...prevFields[fieldName], value: text },
     }));
     validateField(fieldName, fieldProps, text);
+
+    onChangeFields(fieldName, text);
   };
 
   const validateField = (fieldName, fieldProps, fieldValue) => {

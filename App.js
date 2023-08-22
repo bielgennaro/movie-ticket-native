@@ -9,35 +9,39 @@ import TabNavigator from "./src/components/navigator";
 import MovieDetails from "./src/pages/details/index";
 import { Login } from "./src/pages/login";
 import { MovieRegister } from "./src/pages/movieRegister";
+import { createContext, useEffect } from "react";
+import Provider from "./src/components/Provider";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="Tab"
-          component={TabNavigator}
-          options={{ animation: "default" }}
-        />
-        <Stack.Screen
-          name="MovieDetails"
-          component={MovieDetails}
-          options={{ animation: "slide_from_bottom" }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ animation: "slide_from_bottom" }}
-        />
-        <Stack.Screen
-          name="MovieRegister"
-          component={MovieRegister}
-          options={{ animation: "slide_from_bottom" }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="Tab"
+            component={TabNavigator}
+            options={{ animation: "default" }}
+          />
+          <Stack.Screen
+            name="MovieDetails"
+            component={MovieDetails}
+            options={{ animation: "slide_from_bottom" }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ animation: "slide_from_bottom" }}
+          />
+          <Stack.Screen
+            name="MovieRegister"
+            component={MovieRegister}
+            options={{ animation: "slide_from_bottom" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

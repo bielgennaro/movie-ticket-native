@@ -1,4 +1,5 @@
 import { useRoute } from "@react-navigation/native";
+import { useState } from "react";
 import { SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 import { Button } from "../../components/button";
 import { Fields } from "../../components/fields";
@@ -6,6 +7,8 @@ import { Header } from "../../components/header";
 import { styles } from "./style";
 
 export const MovieRegister = ({ navigation }) => {
+  const [fieldsValue, setFieldsValue] = useState({});
+
   const route = useRoute();
   const { params } = route;
 
@@ -38,6 +41,10 @@ export const MovieRegister = ({ navigation }) => {
     },
   };
 
+  const onChangeFields = (fieldName, text) => {
+    setFieldsValue((prevState) => ({ ...prevState, [fieldName]: text }));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -47,7 +54,7 @@ export const MovieRegister = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
         <View style={styles.viewContainer}>
-          <Fields values={values} />
+          <Fields values={values} onChangeFields={onChangeFields} />
           <Button text="Salvar" />
         </View>
       </ScrollView>

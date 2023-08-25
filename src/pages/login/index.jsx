@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Fields } from "../../components/fields";
-import { Button } from "../../components/button";
+import { styles } from "./style";
 
 export const Login = ({ navigation }) => {
+  const [fieldsValue, setFieldsValue] = useState({});
+
   const values = {
     email: {
       required: true,
@@ -25,36 +27,20 @@ export const Login = ({ navigation }) => {
     },
   };
 
+  const onChangeFields = (fieldName, text) => {
+    setFieldsValue((prevState) => ({ ...prevState, [fieldName]: text }));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewContainer}>
         <MaterialIcons name="account-circle" size={200} color="#fff" />
-        <Fields values={values} />
-        <Button text="Entrar" />
+        <Fields
+          values={values}
+          onChangeFields={onChangeFields}
+          textButton="Entrar"
+        />
       </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-    color: "#fff",
-  },
-  textInput: {
-    backgroundColor: "transparent",
-    color: "#fff",
-    textAlign: "center",
-    borderBottomColor: "#d9232a",
-    borderBottomWidth: 1,
-    width: "80%",
-    height: 40,
-  },
-  viewContainer: {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    gap: 20,
-  },
-});

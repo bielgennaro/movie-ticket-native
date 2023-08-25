@@ -104,9 +104,7 @@ export default function MovieDetails({ navigation }) {
                 <Text style={styles.movieTitle}>{params.title}</Text>
               </View>
               <View>
-                <Text style={styles.movieDescription}>
-                  {params.description}
-                </Text>
+                <Text style={styles.movieDescription}>{params.synopsis}</Text>
               </View>
               <View>
                 <Text style={styles.separator}>Sessões Disponíveis</Text>

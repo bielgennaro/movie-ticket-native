@@ -8,7 +8,6 @@ import { styles } from "./style";
 
 export const MovieRegister = ({ navigation }) => {
   const [fieldsValue, setFieldsValue] = useState({});
-
   const route = useRoute();
   const { params } = route;
 
@@ -55,7 +54,6 @@ export const MovieRegister = ({ navigation }) => {
         />
         <View style={styles.viewContainer}>
           <Fields values={values} onChangeFields={onChangeFields} />
-          <Button text="Salvar" />
         </View>
       </ScrollView>
     </SafeAreaView>

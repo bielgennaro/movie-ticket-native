@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { TextInput, Text, StyleSheet } from "react-native";
+import { Button } from "../../components/button";
 
-export const Fields = ({ values, onChangeFields }) => {
+export const Fields = ({
+  values,
+  onChangeFields,
+  hasButton = true,
+  typeButton = "primary",
+  textButton = "Salvar",
+}) => {
   const [fields, setFields] = useState(values);
   const [error, setError] = useState({});
+  const hasFieldErrors = !!Object.values(error).length;
 
   const handleFieldChange = (fieldName, fieldProps, text) => {
     setFields((prevFields) => ({
@@ -21,18 +29,20 @@ export const Fields = ({ values, onChangeFields }) => {
     if (fieldProps.email) {
       const eRegex = /^([a-zA-Z0-9_.+-]+)@([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)$/;
       newError[fieldName] = eRegex.test(fieldValue) ? "" : "E-mail inválido";
-    }
-
-    if (fieldProps.maxLength && fieldValue.length > fieldProps.maxLength) {
+    } else if (
+      fieldProps.maxLength &&
+      fieldValue.length > fieldProps.maxLength
+    ) {
       newError[fieldName] = `Máximo de ${fieldProps.maxLength} caracteres`;
-    }
-
-    if (fieldProps.minLength && fieldValue.length > fieldProps.minLength) {
+    } else if (
+      fieldProps.minLength &&
+      fieldValue.length < fieldProps.minLength
+    ) {
       newError[fieldName] = `Mínimo de ${fieldProps.minLength} caracteres`;
-    }
-
-    if (fieldProps.required && fieldValue === "") {
+    } else if (fieldProps.required && (fieldValue === "" || !fieldValue)) {
       newError[fieldName] = "Campo obrigatório";
+    } else {
+      newError = {};
     }
 
     setError(newError);
@@ -62,6 +72,9 @@ export const Fields = ({ values, onChangeFields }) => {
           </React.Fragment>
         );
       })}
+      {hasButton && (
+        <Button text={textButton} type={typeButton} disabled={hasFieldErrors} />
+      )}
     </>
   );
 };

@@ -11,7 +11,7 @@ export const MovieCard = ({ navigation, ...props }) => (
       <Image
         style={styles.cardImage}
         source={{
-          uri: props.uriImage,
+          uri: props.bannerUrl,
         }}
       />
     </View>

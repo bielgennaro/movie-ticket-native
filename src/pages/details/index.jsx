@@ -98,7 +98,7 @@ export default function MovieDetails({ navigation }) {
               />
               <Image
                 style={styles.screenImage}
-                source={{ uri: params.uriImage }}
+                source={{ uri: params.bannerUrl }}
               />
               <View>
                 <Text style={styles.movieTitle}>{params.title}</Text>

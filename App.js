@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/pages/home/index";
-import TabNavigator from "./src/components/navigator";
+import { TabNavigator } from "./src/components/navigator";
 import MovieDetails from "./src/pages/details/index";
 import { Login } from "./src/pages/login";
 import { MovieRegister } from "./src/pages/movieRegister";

@@ -10,7 +10,7 @@ const routesName = {
   login: "Login",
 };
 
-export default function TabNavigator() {
+export function TabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName={routesName.home}

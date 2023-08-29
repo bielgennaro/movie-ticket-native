@@ -17,12 +17,12 @@ export const Login = ({ navigation }) => {
   const values = {
     email: {
       required: true,
-      email: true,
+      isEmail: true,
       placeholder: "E-mail",
     },
     password: {
       required: true,
-      password: true,
+      isPassword: true,
       placeholder: "Senha",
     },
   };

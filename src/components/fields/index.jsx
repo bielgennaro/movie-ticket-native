@@ -19,34 +19,53 @@ export const Fields = ({
       [fieldName]: { ...prevFields[fieldName], value: text },
     }));
     validateField(fieldName, fieldProps, text);
-
     onChangeFields(fieldName, text);
   };
 
   const validateField = (fieldName, fieldProps, fieldValue) => {
-    let newError = { ...error };
+    setError((prevError) => {
+      const newError = { ...prevError };
 
-    if (fieldProps.email) {
-      const eRegex = /^([a-zA-Z0-9_.+-]+)@([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)$/;
-      newError[fieldName] = eRegex.test(fieldValue) ? "" : "E-mail inválido";
-    } else if (
-      fieldProps.maxLength &&
-      fieldValue.length > fieldProps.maxLength
-    ) {
-      newError[fieldName] = `Máximo de ${fieldProps.maxLength} caracteres`;
-    } else if (
-      fieldProps.minLength &&
-      fieldValue.length < fieldProps.minLength
-    ) {
-      newError[fieldName] = `Mínimo de ${fieldProps.minLength} caracteres`;
-    } else if (fieldProps.required && (fieldValue === "" || !fieldValue)) {
-      newError[fieldName] = "Campo obrigatório";
-    } else {
-      newError = {};
-    }
+      if (fieldProps.required && (fieldValue === "" || !fieldValue)) {
+        newError[fieldName] = "Campo obrigatório";
+      } else if (fieldProps.isEmail) {
+        const eRegex = /^([a-zA-Z0-9_.+-]+)@([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)$/;
+        const isValidEmail = eRegex.test(fieldValue);
 
-    setError(newError);
+        if (!isValidEmail) {
+          newError[fieldName] = "E-mail inválido";
+        } else {
+          delete newError[fieldName];
+        }
+      } else if (
+        fieldProps.maxLength &&
+        fieldValue.length > fieldProps.maxLength
+      ) {
+        newError[fieldName] = `Máximo de ${fieldProps.maxLength} caracteres`;
+      } else if (
+        fieldProps.minLength &&
+        fieldValue.length < fieldProps.minLength
+      ) {
+        newError[fieldName] = `Mínimo de ${fieldProps.minLength} caracteres`;
+      } else {
+        delete newError[fieldName];
+      }
+
+      return newError;
+    });
   };
+
+  const validateInitialFields = () => {
+    Object.keys(fields).forEach((fieldName) => {
+      const fieldProps = fields[fieldName];
+
+      validateField(fieldName, fieldProps, fieldProps.initialValue || null);
+    });
+  };
+
+  useEffect(() => {
+    validateInitialFields();
+  }, []);
 
   return (
     <>
@@ -64,7 +83,7 @@ export const Fields = ({
                 handleFieldChange(fieldName, fieldProps, text)
               }
               value={fieldProps.initialValue || fieldProps.value}
-              secureTextEntry={fieldProps.password}
+              secureTextEntry={fieldProps.isPassword}
             />
             <Text style={{ color: "red" }} key={`error[${fieldName}]`}>
               {fieldError}

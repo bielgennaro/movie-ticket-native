@@ -12,16 +12,18 @@ import {
   StyleSheet,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useContext } from "react";
 import { Header } from "../../components/header";
 import { styles } from "./style";
 import { Button } from "../../components/button";
+import UserContext from "../../context";
 
 export default function MovieDetails({ navigation }) {
   const [sessionHour, setSessionHour] = useState(null);
   const [tickets, setTickets] = useState([0, 0]);
   const [active, setActive] = useState(null);
   const route = useRoute();
+  const user = useContext(UserContext);
   const { params } = route;
   const [maxTickets, setMaxTickets] = useState(params.avaiableTickets);
   const discountedTicketOptions = [];
@@ -161,10 +163,12 @@ export default function MovieDetails({ navigation }) {
           );
         }}
       />
-      <Button
-        type="edit"
-        onPress={() => navigation.push("MovieRegister", params)}
-      />
+      {user.isAdmin && (
+        <Button
+          type="edit"
+          onPress={() => navigation.push("MovieRegister", params)}
+        />
+      )}
     </SafeAreaView>
   );
 }

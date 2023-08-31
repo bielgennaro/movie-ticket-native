@@ -8,8 +8,8 @@ import Home from "./src/pages/home/index";
 import { TabNavigator } from "./src/components/navigator";
 import MovieDetails from "./src/pages/details/index";
 import { Login } from "./src/pages/login";
+import { UserRegister } from "./src/pages/userRegister";
 import { MovieRegister } from "./src/pages/movieRegister";
-import { createContext, useEffect } from "react";
 import Provider from "./src/components/Provider";
 
 const Stack = createNativeStackNavigator();
@@ -32,6 +32,11 @@ export default function App() {
           <Stack.Screen
             name="Login"
             component={Login}
+            options={{ animation: "slide_from_bottom" }}
+          />
+          <Stack.Screen
+            name="UserRegister"
+            component={UserRegister}
             options={{ animation: "slide_from_bottom" }}
           />
           <Stack.Screen

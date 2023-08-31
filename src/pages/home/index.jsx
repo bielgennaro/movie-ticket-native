@@ -1,4 +1,9 @@
-import { FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { data } from "../../helper/data";
 import { MovieCard } from "../../components/movieCard";
@@ -11,6 +16,7 @@ export default function Home({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="#000" />
       <FlatList
         numColumns={2}
         columnWrapperStyle={styles.columnWrapperStyle}

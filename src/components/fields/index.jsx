@@ -38,6 +38,11 @@ export const Fields = ({
           delete newError[fieldName];
         }
       } else if (
+        fieldProps.confirmField &&
+        fieldValue !== fields[fieldProps.confirmField]?.value
+      ) {
+        newError[fieldName] = "Confirmação inválida";
+      } else if (
         fieldProps.maxLength &&
         fieldValue.length > fieldProps.maxLength
       ) {

@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "flex-start",
+    width: "100%",
   },
   title: {
     color: "#fff",

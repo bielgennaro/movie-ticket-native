@@ -15,7 +15,7 @@ export const Button = ({
     new: styles.newMovieButton,
   };
 
-  if (type === "primary" || type === "secondary") {
+  if (type === "primary") {
     return (
       <TouchableOpacity
         style={[
@@ -33,6 +33,19 @@ export const Button = ({
             { ...styleProps },
           ]}
         >
+          {text}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  if (type === "secondary") {
+    return (
+      <TouchableOpacity
+        style={[types[type], { ...styleProps }]}
+        onPress={onPress}
+      >
+        <Text style={[styles.text, { color: "#d9232a" }, { ...styleProps }]}>
           {text}
         </Text>
       </TouchableOpacity>

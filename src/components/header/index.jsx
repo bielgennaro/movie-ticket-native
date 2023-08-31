@@ -8,8 +8,9 @@ export const Header = ({
   nameIcon = "arrow-back",
   sizeIcon = 23,
   colorIcon = "#fff",
+  styleProps,
 }) => (
-  <View style={styles.container}>
+  <View style={[styles.container, { ...styleProps }]}>
     <TouchableOpacity onPress={onPress}>
       <MaterialIcons name={nameIcon} color={colorIcon} size={sizeIcon} />
     </TouchableOpacity>

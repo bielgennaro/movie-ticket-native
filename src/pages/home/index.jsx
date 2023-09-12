@@ -11,7 +11,7 @@ import { styles } from "./style";
 import { Button } from "../../components/button";
 import UserContext from "../../context";
 
-export default function Home({ navigation }) {
+export const Home = ({ navigation }) => {
   const user = useContext(UserContext);
 
   return (
@@ -31,4 +31,4 @@ export default function Home({ navigation }) {
       )}
     </SafeAreaView>
   );
-}
+};

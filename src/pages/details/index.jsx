@@ -18,7 +18,7 @@ import { styles } from "./style";
 import { Button } from "../../components/button";
 import UserContext from "../../context";
 
-export default function MovieDetails({ navigation }) {
+export const MovieDetails = ({ navigation }) => {
   const [sessionHour, setSessionHour] = useState(null);
   const [tickets, setTickets] = useState([0, 0]);
   const [active, setActive] = useState(null);
@@ -138,6 +138,11 @@ export default function MovieDetails({ navigation }) {
                 text="Salvar"
                 disabled={isDisabled()}
                 styleProps={{ alignSelf: "center" }}
+                onPress={() => {
+                  if (!user.isLogged) {
+                    navigation.push("Login", { isFromMovieDetails: true });
+                  }
+                }}
               />
             </>
           )
@@ -171,4 +176,4 @@ export default function MovieDetails({ navigation }) {
       )}
     </SafeAreaView>
   );
-}
+};

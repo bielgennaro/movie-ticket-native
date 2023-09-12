@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, Text, StyleSheet } from "react-native";
+import { TextInput, Text, StyleSheet, View } from "react-native";
 import { Button } from "../../components/button";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export const Fields = ({
   values,
@@ -11,7 +12,11 @@ export const Fields = ({
 }) => {
   const [fields, setFields] = useState(values);
   const [error, setError] = useState({});
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
   const hasFieldErrors = !!Object.values(error).length;
+
+  DropDownPicker.setTheme("DARK");
 
   const handleFieldChange = (fieldName, fieldProps, text) => {
     setFields((prevFields) => ({
@@ -26,7 +31,13 @@ export const Fields = ({
     setError((prevError) => {
       const newError = { ...prevError };
 
-      if (fieldProps.required && (fieldValue === "" || !fieldValue)) {
+      if (fieldProps.isDropdown && fieldProps.required) {
+        if (!fieldValue) {
+          newError[fieldName] = "Campo obrigatório";
+        } else {
+          delete newError[fieldName];
+        }
+      } else if (fieldProps.required && (fieldValue === "" || !fieldValue)) {
         newError[fieldName] = "Campo obrigatório";
       } else if (fieldProps.isEmail) {
         const eRegex = /^([a-zA-Z0-9_.+-]+)@([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)$/;
@@ -77,6 +88,40 @@ export const Fields = ({
       {Object.keys(fields).map((fieldName) => {
         const fieldProps = fields[fieldName];
         const fieldError = error[fieldName];
+
+        if (fieldProps.isDropdown) {
+          return (
+            <View style={{ zIndex: 1000, width: "80%" }} key={fieldName}>
+              <DropDownPicker
+                placeholder={fieldProps?.placeholder}
+                placeholderStyle={{
+                  textAlign: "center",
+                }}
+                showArrowIcon={false}
+                schema={{
+                  label: "title",
+                  value: "id",
+                }}
+                autoScroll
+                labelStyle={{ textAlign: "center" }}
+                open={open}
+                value={value}
+                items={fieldProps.options}
+                setOpen={setOpen}
+                setValue={setValue}
+                onChangeValue={(value) =>
+                  validateField(fieldName, fieldProps, value)
+                }
+              />
+              <Text
+                style={{ color: "red", alignSelf: "center" }}
+                key={`error[${fieldName}]`}
+              >
+                {fieldError}
+              </Text>
+            </View>
+          );
+        }
 
         return (
           <React.Fragment key={fieldName}>

@@ -1,4 +1,3 @@
-import { useRoute } from "@react-navigation/native";
 import { useMemo, useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -12,23 +11,26 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Button } from "../../components/button";
 import { Fields } from "../../components/fields";
 import { Header } from "../../components/header";
-import { styles } from "./style";
+import { options } from "../../helper/dataSession";
+import { styles } from "./styles";
 
-export const Login = ({ navigation }) => {
-  const route = useRoute();
-  const { params } = route;
+export const SessionRegister = ({ navigation }) => {
   const [fieldsValue, setFieldsValue] = useState({});
 
   const values = {
-    email: {
+    avaiableTickets: {
       required: true,
-      isEmail: true,
-      placeholder: "E-mail",
+      placeholder: "Quantidade de Ingressos Disponíveis",
     },
-    password: {
+    hour: {
       required: true,
-      isPassword: true,
-      placeholder: "Senha",
+      placeholder: "Horário",
+    },
+    movie: {
+      required: true,
+      isDropdown: true,
+      placeholder: "Filme",
+      options: options,
     },
   };
 
@@ -38,21 +40,8 @@ export const Login = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {params?.isFromMovieDetails && (
-        <Header title={"Login"} onPress={() => navigation.goBack()} />
-      )}
       <View style={styles.viewContainer}>
-        <MaterialIcons name="account-circle" size={200} color="#fff" />
-        <Fields
-          values={values}
-          onChangeFields={onChangeFields}
-          textButton="Entrar"
-        />
-        <Button
-          type="secondary"
-          text="Cadastre-se"
-          onPress={() => navigation.push("UserRegister")}
-        />
+        <Fields values={values} onChangeFields={onChangeFields} />
       </View>
     </SafeAreaView>
   );

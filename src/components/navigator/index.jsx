@@ -26,7 +26,7 @@ export function TabNavigator() {
           let nameIcon;
 
           if (route.name === routesName.home) {
-            nameIcon = focused ? "home-filled" : "home";
+            nameIcon = "home";
           } else if (route.name === routesName.login) {
             nameIcon = "person";
           } else if (route.name === routesName.sessionRegister) {
@@ -48,7 +48,7 @@ export function TabNavigator() {
     >
       <Tab.Screen name={routesName.home} component={Home} />
       <Tab.Screen name={routesName.login} component={Login} />
-      {!user.isAdmin && (
+      {user.isAdmin && (
         <Tab.Screen
           name={routesName.sessionRegister}
           component={SessionRegister}

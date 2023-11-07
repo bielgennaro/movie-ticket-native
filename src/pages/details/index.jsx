@@ -139,7 +139,7 @@ export const MovieDetails = ({ navigation }) => {
                 disabled={isDisabled()}
                 styleProps={{ alignSelf: "center" }}
                 onPress={() => {
-                  if (!user.isLogged) {
+                  if (!user.isLoggedIn) {
                     navigation.push("Login", { isFromMovieDetails: true });
                   }
                 }}

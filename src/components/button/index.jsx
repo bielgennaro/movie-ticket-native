@@ -13,6 +13,7 @@ export const Button = ({
     secondary: styles.buttonSecondary,
     edit: styles.newMovieButton,
     new: styles.newMovieButton,
+    delete: styles.newMovieButton,
   };
 
   if (type === "primary") {
@@ -62,8 +63,22 @@ export const Button = ({
 
   if (type === "edit") {
     return (
-      <TouchableOpacity style={types[type]} onPress={onPress}>
+      <TouchableOpacity
+        style={[types[type], { ...styleProps }]}
+        onPress={onPress}
+      >
         <MaterialIcons name="edit" color="white" size={20} />
+      </TouchableOpacity>
+    );
+  }
+
+  if (type === "delete") {
+    return (
+      <TouchableOpacity
+        style={[types[type], { ...styleProps }]}
+        onPress={onPress}
+      >
+        <MaterialIcons name="delete" color="white" size={20} />
       </TouchableOpacity>
     );
   }

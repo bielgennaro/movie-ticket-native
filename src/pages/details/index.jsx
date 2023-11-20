@@ -117,6 +117,28 @@ export const MovieDetails = ({ navigation }) => {
         ListFooterComponent={
           !!sessionHour && (
             <>
+              {active && user.isAdmin && (
+                <View
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 10,
+                    marginTop: 20,
+                  }}
+                >
+                  <Button
+                    text="Editar Sessão"
+                    styleProps={{ width: "94%", textAlign: "center" }}
+                  />
+                  <Button
+                    text="Deletar Sessão"
+                    type="secondary"
+                    styleProps={{ width: "94%", textAlign: "center" }}
+                  />
+                </View>
+              )}
               <View style={styles.ticketsContainer}>
                 <Text style={styles.separator}>Entradas Disponíveis</Text>
                 <Text style={styles.label}>Inteira</Text>
@@ -169,10 +191,17 @@ export const MovieDetails = ({ navigation }) => {
         }}
       />
       {user.isAdmin && (
-        <Button
-          type="edit"
-          onPress={() => navigation.push("MovieRegister", params)}
-        />
+        <View>
+          <Button
+            type="edit"
+            onPress={() => navigation.push("MovieRegister", params)}
+            styleProps={{ bottom: 70 }}
+          />
+          <Button
+            type="delete"
+            onPress={() => navigation.push("MovieRegister", params)}
+          />
+        </View>
       )}
     </SafeAreaView>
   );

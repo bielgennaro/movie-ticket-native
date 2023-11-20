@@ -9,6 +9,7 @@ export const Fields = ({
   hasButton = true,
   typeButton = "primary",
   textButton = "Salvar",
+  handleSubmit,
 }) => {
   const [fields, setFields] = useState(values);
   const [error, setError] = useState({});
@@ -142,7 +143,12 @@ export const Fields = ({
         );
       })}
       {hasButton && (
-        <Button text={textButton} type={typeButton} disabled={hasFieldErrors} />
+        <Button
+          text={textButton}
+          type={typeButton}
+          disabled={hasFieldErrors}
+          onPress={handleSubmit}
+        />
       )}
     </>
   );

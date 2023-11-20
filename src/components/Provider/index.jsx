@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import UserContext from "../../context";
 
 const Provider = ({ children }) => {
-  const [isAdmin, setIsAdmin] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   return (
     <UserContext.Provider
@@ -18,6 +19,8 @@ const Provider = ({ children }) => {
         setUserName,
         userEmail,
         setUserEmail,
+        userId,
+        setUserId,
       }}
     >
       {children}

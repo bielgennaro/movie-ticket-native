@@ -5,6 +5,8 @@ import UserContext from "../../context";
 import { Home } from "../../pages/home/index";
 import { Login } from "../../pages/login";
 import { SessionRegister } from "../../pages/sessionRegister";
+import UserList from "../../pages/userList";
+import { UserTickets } from "../../pages/userScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -12,6 +14,8 @@ const routesName = {
   home: "Filmes em Cartaz",
   login: "Login",
   sessionRegister: "Cadastro de Sessão",
+  userScreen: "Usuário",
+  userList: "Listagem de Usuários",
 };
 
 export function TabNavigator() {
@@ -27,7 +31,11 @@ export function TabNavigator() {
 
           if (route.name === routesName.home) {
             nameIcon = "home";
-          } else if (route.name === routesName.login) {
+          } else if (
+            route.name === routesName.login ||
+            route.name === routesName.userScreen ||
+            route.name === routesName.userList
+          ) {
             nameIcon = "person";
           } else if (route.name === routesName.sessionRegister) {
             nameIcon = "movie-creation";
@@ -47,7 +55,15 @@ export function TabNavigator() {
       })}
     >
       <Tab.Screen name={routesName.home} component={Home} />
-      <Tab.Screen name={routesName.login} component={Login} />
+      {!user.isLoggedIn && (
+        <Tab.Screen name={routesName.login} component={Login} />
+      )}
+      {user.isLoggedIn && !user.isAdmin && (
+        <Tab.Screen name={routesName.userScreen} component={UserTickets} />
+      )}
+      {user.isLoggedIn && user.isAdmin && (
+        <Tab.Screen name={routesName.userList} component={UserList} />
+      )}
       {user.isAdmin && (
         <Tab.Screen
           name={routesName.sessionRegister}

@@ -5,6 +5,7 @@ import { Button } from "../../components/button";
 import { Fields } from "../../components/fields";
 import { Header } from "../../components/header";
 import { styles } from "./style";
+import ToastManager, { Toast } from "toastify-react-native";
 
 export const MovieRegister = ({ navigation }) => {
   const [fieldsValue, setFieldsValue] = useState({});
@@ -44,6 +45,55 @@ export const MovieRegister = ({ navigation }) => {
     setFieldsValue((prevState) => ({ ...prevState, [fieldName]: text }));
   };
 
+  const showToasts = (message, type) => {
+    if (type === "success") {
+      Toast.success(message);
+    }
+
+    if (type === "error") {
+      Toast.error(message);
+    }
+  };
+
+  const handleSubmit = () => {
+    const params = JSON.stringify({
+      title: fieldsValue.title,
+      gender: fieldsValue.gender,
+      director: fieldsValue.director,
+      synopsis: fieldsValue.synopsis,
+      bannerUrl: fieldsValue.bannerUrl,
+    });
+
+    console.log(params);
+
+    fetch(
+      "https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/movies/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: params,
+      }
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          showToasts("Filme cadastrado com sucesso!", "success");
+          navigation.push("Tab");
+        } else {
+          showToasts("Erro ao cadastrar Filme!", "error");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        showToasts(
+          "Ocorreu um erro interno, favor contate o administrador",
+          "error"
+        );
+      });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -53,7 +103,11 @@ export const MovieRegister = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
         <View style={styles.viewContainer}>
-          <Fields values={values} onChangeFields={onChangeFields} />
+          <Fields
+            values={values}
+            onChangeFields={onChangeFields}
+            handleSubmit={handleSubmit}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

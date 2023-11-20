@@ -11,6 +11,7 @@ import { Login } from "./src/pages/login";
 import { UserRegister } from "./src/pages/userRegister";
 import { MovieRegister } from "./src/pages/movieRegister";
 import Provider from "./src/components/Provider";
+import { UserTickets } from "./src/pages/userScreen";
 
 const Stack = createNativeStackNavigator();
 

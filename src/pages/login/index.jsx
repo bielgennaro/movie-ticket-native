@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useContext } from "react";
 import {
   SafeAreaView,
   View,
@@ -13,9 +13,12 @@ import { Button } from "../../components/button";
 import { Fields } from "../../components/fields";
 import { Header } from "../../components/header";
 import { styles } from "./style";
+import ToastManager, { Toast } from "toastify-react-native";
+import UserContext from "../../context";
 
 export const Login = ({ navigation }) => {
   const route = useRoute();
+  const userContext = useContext(UserContext);
   const { params } = route;
   const [fieldsValue, setFieldsValue] = useState({});
 
@@ -32,8 +35,59 @@ export const Login = ({ navigation }) => {
     },
   };
 
+  const showToasts = (message, type) => {
+    if (type === "success") {
+      Toast.success(message);
+    }
+
+    if (type === "error") {
+      Toast.error(message);
+    }
+  };
+
   const onChangeFields = (fieldName, text) => {
     setFieldsValue((prevState) => ({ ...prevState, [fieldName]: text }));
+  };
+
+  const handleSubmit = () => {
+    const requestParams = JSON.stringify({
+      email: fieldsValue.email,
+      password: fieldsValue.password,
+    });
+
+    fetch("https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/users/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: requestParams,
+    })
+      .then(async (response) => {
+        console.log(response);
+        try {
+          if (response.ok) {
+            const res = await response.json();
+
+            navigation.push("Tab");
+            userContext.setIsLoggedIn(true);
+            userContext.setIsAdmin(res.isAdmin);
+            userContext.setUserId(res.id);
+          } else {
+            showToasts("Erro ao realizar Login!", "error");
+          }
+        } catch (error) {
+          showToasts(
+            "Ocorreu um erro interno. Favor contatar o administrador.",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        showToasts(
+          "Ocorreu um erro durante a requisição. Verifique sua conexão.",
+          "error"
+        );
+      });
   };
 
   return (
@@ -42,10 +96,12 @@ export const Login = ({ navigation }) => {
         <Header title={"Login"} onPress={() => navigation.goBack()} />
       )}
       <View style={styles.viewContainer}>
+        <ToastManager />
         <MaterialIcons name="account-circle" size={200} color="#fff" />
         <Fields
           values={values}
           onChangeFields={onChangeFields}
+          handleSubmit={handleSubmit}
           textButton="Entrar"
         />
         <Button

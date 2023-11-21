@@ -8,17 +8,7 @@ export const MovieCard = ({ navigation, ...props }) => (
     style={styles.cardContainer}
   >
     <View>
-      <Image
-        style={styles.cardImage}
-        source={{
-          uri: props.bannerUrl,
-        }}
-      />
-    </View>
-
-    <View style={styles.rateContainer}>
-      <Text style={styles.voteText}>{props.rate}</Text>
-      <MaterialIcons name="star" color="yellow" />
+      <Image style={styles.cardImage} source={{ uri: props.bannerUrl }} />
     </View>
 
     <View>

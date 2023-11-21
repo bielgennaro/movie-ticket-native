@@ -17,21 +17,53 @@ import { Header } from "../../components/header";
 import { styles } from "./style";
 import { Button } from "../../components/button";
 import UserContext from "../../context";
+import ToastManager, { Toast } from "toastify-react-native";
+import moment from "moment";
 
 export const MovieDetails = ({ navigation }) => {
   const [sessionHour, setSessionHour] = useState(null);
   const [tickets, setTickets] = useState([0, 0]);
   const [active, setActive] = useState(null);
+  const [sessions, setSessions] = useState(null);
   const route = useRoute();
   const user = useContext(UserContext);
   const { params } = route;
-  const [maxTickets, setMaxTickets] = useState(params.avaiableTickets);
+  const [maxTickets, setMaxTickets] = useState();
   const discountedTicketOptions = [];
   const regularTicketOptions = [];
 
   useEffect(() => {
-    setMaxTickets(params.avaiableTickets);
-  }, [params]);
+    if (sessionHour) {
+      setMaxTickets(sessionHour.availableTickets);
+    }
+  }, [sessionHour]);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      fetch("https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/sessions", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(async (response) => {
+          const res = await response.json();
+
+          if (response.ok) {
+            if (!res.length) {
+              Toast.warn("Não há Sessões!");
+            } else {
+              setSessions(res);
+            }
+          } else {
+            Toast.error("Não foi possível carregar as Sessões!");
+          }
+        })
+        .catch((error) => Toast.error("Erro ao carregar as Sessões!"));
+    };
+
+    fetchSessions();
+  }, []);
 
   const isDisabled = () => {
     return tickets[0] === 0 && tickets[1] === 0;
@@ -62,6 +94,98 @@ export const MovieDetails = ({ navigation }) => {
     },
     [tickets, maxTickets]
   );
+
+  const showToasts = (message, type) => {
+    if (type === "success") {
+      Toast.success(message);
+    }
+
+    if (type === "error") {
+      Toast.error(message);
+    }
+  };
+
+  const handleSaveTickets = () => {
+    const requestParams = JSON.stringify({
+      userId: user.userId,
+      sessionId: sessionHour.id,
+    });
+
+    console.log(requestParams);
+
+    fetch(
+      "https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/tickets/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestParams,
+      }
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          Toast.success("Ingressos reservados com sucesso!");
+          navigation.push("Tab");
+        } else {
+          Toast.error("Erro ao reservar ingressos!");
+        }
+      })
+      .catch((error) => {
+        Toast.error("Ocorreu um erro interno, favor contate o administrador");
+      });
+  };
+
+  const onPressButtonDelete = () => {
+    fetch(
+      `https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/movies/delete/${params.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          Toast.success("Filme deletado com sucesso!");
+          navigation.push("Tab");
+        } else {
+          Toast.error("Erro ao deletar Filme!");
+        }
+      })
+      .catch((error) => {
+        Toast.error("Ocorreu um erro interno, favor contate o administrador");
+      });
+  };
+
+  const onPressButtonDeleteSession = () => {
+    fetch(
+      `https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/sessions/delete/${sessionHour.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          showToasts("Sessão deletada com sucesso!", "success");
+          navigation.push("Tab");
+        } else {
+          showToasts("Erro ao deletar Sessão!", "error");
+        }
+      })
+      .catch((error) => {
+        showToasts(
+          "Ocorreu um erro interno, favor contate o administrador",
+          "error"
+        );
+      });
+  };
 
   const onPressSessionHour = (item, index) => {
     if (active === index) {
@@ -117,7 +241,7 @@ export const MovieDetails = ({ navigation }) => {
         ListFooterComponent={
           !!sessionHour && (
             <>
-              {active && user.isAdmin && (
+              {active && user?.isAdmin && (
                 <View
                   style={{
                     width: "100%",
@@ -131,11 +255,17 @@ export const MovieDetails = ({ navigation }) => {
                   <Button
                     text="Editar Sessão"
                     styleProps={{ width: "94%", textAlign: "center" }}
+                    onPress={() =>
+                      navigation.push("SessionRegister", {
+                        session: sessionHour,
+                      })
+                    }
                   />
                   <Button
                     text="Deletar Sessão"
                     type="secondary"
                     styleProps={{ width: "94%", textAlign: "center" }}
+                    onPress={() => onPressButtonDeleteSession()}
                   />
                 </View>
               )}
@@ -163,6 +293,8 @@ export const MovieDetails = ({ navigation }) => {
                 onPress={() => {
                   if (!user.isLoggedIn) {
                     navigation.push("Login", { isFromMovieDetails: true });
+                  } else {
+                    handleSaveTickets();
                   }
                 }}
               />
@@ -171,10 +303,12 @@ export const MovieDetails = ({ navigation }) => {
         }
         columnWrapperStyle={styles.columnWrapperStyle}
         numColumns={5}
-        key={params.sessions.map((value) => value)}
-        data={params.sessions}
-        keyExtractor={(item) => item}
+        key={sessions?.map((session) => session.id)}
+        data={sessions}
+        keyExtractor={(session) => session.id}
         renderItem={({ item, index }) => {
+          const text = moment().format("HH:mm", item.date);
+
           return (
             <TouchableOpacity
               onPress={() => onPressSessionHour(item, index)}
@@ -185,22 +319,19 @@ export const MovieDetails = ({ navigation }) => {
                 },
               ]}
             >
-              <Text style={styles.sessionHourText}>{item}</Text>
+              <Text style={styles.sessionHourText}>{text}</Text>
             </TouchableOpacity>
           );
         }}
       />
-      {user.isAdmin && (
+      {user?.isAdmin && (
         <View>
           <Button
             type="edit"
             onPress={() => navigation.push("MovieRegister", params)}
             styleProps={{ bottom: 70 }}
           />
-          <Button
-            type="delete"
-            onPress={() => navigation.push("MovieRegister", params)}
-          />
+          <Button type="delete" onPress={() => onPressButtonDelete()} />
         </View>
       )}
     </SafeAreaView>

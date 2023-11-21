@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextInput, Text, StyleSheet, View } from "react-native";
+import moment from "moment";
 import { Button } from "../../components/button";
 import DropDownPicker from "react-native-dropdown-picker";
 
@@ -10,14 +11,23 @@ export const Fields = ({
   typeButton = "primary",
   textButton = "Salvar",
   handleSubmit,
+  fetchOptions,
 }) => {
   const [fields, setFields] = useState(values);
   const [error, setError] = useState({});
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [options, setOptions] = useState([]);
   const hasFieldErrors = !!Object.values(error).length;
 
   DropDownPicker.setTheme("DARK");
+
+  const convertToISO = (fieldName, fieldValue) => {
+    const parsedTime = moment(fieldValue, "HH:mm");
+    const isoFormat = parsedTime.toISOString();
+
+    onChangeFields(fieldName, isoFormat);
+  };
 
   const handleFieldChange = (fieldName, fieldProps, text) => {
     setFields((prevFields) => ({
@@ -25,7 +35,12 @@ export const Fields = ({
       [fieldName]: { ...prevFields[fieldName], value: text },
     }));
     validateField(fieldName, fieldProps, text);
-    onChangeFields(fieldName, text);
+
+    if (fieldProps.date) {
+      convertToISO(fieldName, text);
+    } else {
+      onChangeFields(fieldName, text);
+    }
   };
 
   const validateField = (fieldName, fieldProps, fieldValue) => {
@@ -82,6 +97,17 @@ export const Fields = ({
 
   useEffect(() => {
     validateInitialFields();
+
+    if (fetchOptions) {
+      fetchOptions()
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setOptions(data);
+        })
+        .catch((error) => {});
+    }
   }, []);
 
   return (
@@ -90,7 +116,7 @@ export const Fields = ({
         const fieldProps = fields[fieldName];
         const fieldError = error[fieldName];
 
-        if (fieldProps.isDropdown) {
+        if (fieldProps.isDropdown && fieldProps.condition) {
           return (
             <View style={{ zIndex: 1000, width: "80%" }} key={fieldName}>
               <DropDownPicker
@@ -107,12 +133,13 @@ export const Fields = ({
                 labelStyle={{ textAlign: "center" }}
                 open={open}
                 value={value}
-                items={fieldProps.options}
+                items={options}
                 setOpen={setOpen}
                 setValue={setValue}
-                onChangeValue={(value) =>
-                  validateField(fieldName, fieldProps, value)
-                }
+                onChangeValue={(value) => {
+                  validateField(fieldName, fieldProps, value);
+                  onChangeFields(fieldName, value);
+                }}
               />
               <Text
                 style={{ color: "red", alignSelf: "center" }}
@@ -133,7 +160,9 @@ export const Fields = ({
               onChangeText={(text) =>
                 handleFieldChange(fieldName, fieldProps, text)
               }
-              value={fieldProps.initialValue || fieldProps.value}
+              value={
+                !!fieldProps.value ? fieldProps.value : fieldProps.initialValue
+              }
               secureTextEntry={fieldProps.isPassword}
             />
             <Text style={{ color: "red" }} key={`error[${fieldName}]`}>

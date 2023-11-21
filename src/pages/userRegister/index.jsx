@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRoute } from "react";
 import {
   SafeAreaView,
   View,
@@ -16,17 +16,21 @@ import ToastManager, { Toast } from "toastify-react-native";
 
 export const UserRegister = ({ navigation }) => {
   const [fieldsValue, setFieldsValue] = useState({});
+  const route = useRoute();
+  const { params } = route;
 
   const values = {
     email: {
       required: true,
       isEmail: true,
       placeholder: "E-mail",
+      initialValue: params?.user.email,
     },
     confirmEmail: {
       required: true,
       placeholder: "Confirme seu E-mail",
       confirmField: "email",
+      initialValue: params?.user.email,
     },
     password: {
       required: true,
@@ -38,6 +42,17 @@ export const UserRegister = ({ navigation }) => {
       isPassword: true,
       placeholder: "Confirme sua Senha",
       confirmField: "password",
+    },
+    isAdmin: {
+      condition: params.isAdminCreating,
+      required: true,
+      isDropdown: true,
+      placeholder: "Administrador",
+      options: [
+        { title: "Sim", id: true },
+        { title: "Não", id: false },
+      ],
+      initialValue: params?.user.isAdmin,
     },
   };
 
@@ -55,26 +70,46 @@ export const UserRegister = ({ navigation }) => {
     setFieldsValue((prevState) => ({ ...prevState, [fieldName]: text }));
   };
 
+  const getUrl = () => {
+    if (params) {
+      return `https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/users/update/${params.user.id}`;
+    }
+
+    return "https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/users/register";
+  };
+
+  const getMethod = () => {
+    if (params) {
+      return "PUT";
+    }
+
+    return "POST";
+  };
+
   handleSubmit = () => {
-    const params = JSON.stringify({
+    const paramsRest = JSON.stringify({
       email: fieldsValue.email,
       password: fieldsValue.password,
-      isAdmin: fieldsValue?.isAdmin || false,
+      isAdmin: fieldsValue.isAdmin.value,
     });
 
-    fetch("https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/users/register", {
-      method: "POST",
+    fetch(getUrl(), {
+      method: getMethod(),
       headers: {
         "Content-Type": "application/json",
       },
-      body: params,
+      body: paramsRest,
     })
       .then((response) => {
         const res = JSON.stringify(response);
 
         if (response.ok) {
           showToasts("Usuário cadastrado com sucesso!", "success");
-          navigation.push("Login");
+          if (!params) {
+            navigation.push("Login");
+          } else {
+            navigation.push("Tab");
+          }
         } else {
           showToasts("Erro ao cadastrar usuário!", "error");
         }

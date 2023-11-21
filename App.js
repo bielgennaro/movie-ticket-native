@@ -12,6 +12,7 @@ import { UserRegister } from "./src/pages/userRegister";
 import { MovieRegister } from "./src/pages/movieRegister";
 import Provider from "./src/components/Provider";
 import { UserTickets } from "./src/pages/userScreen";
+import { SessionRegister } from "./src/pages/sessionRegister";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,11 @@ export default function App() {
           <Stack.Screen
             name="MovieRegister"
             component={MovieRegister}
+            options={{ animation: "slide_from_bottom" }}
+          />
+          <Stack.Screen
+            name="SessionRegister"
+            component={SessionRegister}
             options={{ animation: "slide_from_bottom" }}
           />
         </Stack.Navigator>

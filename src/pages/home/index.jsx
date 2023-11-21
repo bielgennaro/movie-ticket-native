@@ -16,7 +16,7 @@ export const Home = ({ navigation }) => {
   const user = useContext(UserContext);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchMovies = async () => {
       fetch("https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/movies", {
         method: "GET",
         headers: {
@@ -29,9 +29,9 @@ export const Home = ({ navigation }) => {
           if (response.ok) {
             if (!res.length) {
               Toast.warn("Não há Filmes!");
+            } else {
+              setData(res);
             }
-
-            setData(res);
           } else {
             Toast.error("Não foi possível carregar os Filmes!");
           }
@@ -39,7 +39,7 @@ export const Home = ({ navigation }) => {
         .catch((error) => Toast.error("Erro ao carregar os Filmes!"));
     };
 
-    fetchUsers();
+    fetchMovies();
   }, []);
 
   return (

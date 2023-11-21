@@ -55,29 +55,39 @@ export const MovieRegister = ({ navigation }) => {
     }
   };
 
+  const getUrl = () => {
+    if (params) {
+      return `https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/movies/update/${params.id}`;
+    }
+
+    return "https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/movies/register";
+  };
+
+  const getMethod = () => {
+    if (params) {
+      return "PUT";
+    }
+
+    return "POST";
+  };
+
   const handleSubmit = () => {
-    const params = JSON.stringify({
-      title: fieldsValue.title,
-      gender: fieldsValue.gender,
-      director: fieldsValue.director,
-      synopsis: fieldsValue.synopsis,
-      bannerUrl: fieldsValue.bannerUrl,
+    const paramsRest = JSON.stringify({
+      gender: fieldsValue.gender || params.gender,
+      synopsis: fieldsValue.synopsis || params.synopsis,
+      title: fieldsValue.title || params.title,
+      director: fieldsValue.director || params.director,
+      bannerUrl: fieldsValue.bannerUrl || params.bannerUrl,
     });
 
-    console.log(params);
-
-    fetch(
-      "https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/movies/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: params,
-      }
-    )
+    fetch(getUrl(), {
+      method: getMethod(),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: paramsRest,
+    })
       .then((response) => {
-        console.log(response);
         if (response.ok) {
           showToasts("Filme cadastrado com sucesso!", "success");
           navigation.push("Tab");
@@ -86,7 +96,6 @@ export const MovieRegister = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log(error);
         showToasts(
           "Ocorreu um erro interno, favor contate o administrador",
           "error"
@@ -97,6 +106,7 @@ export const MovieRegister = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        <ToastManager />
         <StatusBar backgroundColor="#000" />
         <Header
           title={!!params ? "Edição de Registro" : "Registro de Filme"}

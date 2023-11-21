@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { SafeAreaView, View, Text, StyleSheet, StatusBar } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { styles } from "./style";
 import ToastManager, { Toast } from "toastify-react-native";
 import { Header } from "../../components/header";
 import { Button } from "../../components/button";
+import UserContext from "../../context";
 
 export const UserTickets = ({ navigation }) => {
   const [userTickets, setUserTickets] = useState([]);
+  const userContext = useContext(UserContext);
 
   const showToasts = (message, type) => {
     if (type === "success") {
@@ -19,21 +21,54 @@ export const UserTickets = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserTickets = async () => {
-      try {
-        const dummyTickets = [
-          { movie: "Filme 1", date: "2023-11-20", time: "18:00", seat: "A1" },
-          { movie: "Filme 2", date: "2023-11-22", time: "20:30", seat: "B5" },
-        ];
-
-        setUserTickets(dummyTickets);
-      } catch (error) {
-        showToasts("Erro ao buscar os Ingressos!", "error");
+  const onPressDeleteTicket = (ticketId) => {
+    fetch(
+      `https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/tickets/delete/${ticketId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
+    )
+      .then(async (response) => {
+        const res = await response.json();
+
+        if (response.ok) {
+          Toast.success("Ingresso excluído com sucesso!");
+          navigation.push("Tab");
+        } else {
+          Toast.error("Não foi possível excluir o Ingresso!");
+        }
+      })
+      .catch((error) => Toast.error("Erro ao excluir o Ingresso!"));
+  };
+
+  useEffect(() => {
+    const fetchTickets = () => {
+      fetch(
+        `https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/tickets/user/${userContext.userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then(async (response) => {
+          const res = await response.json();
+
+          if (response.ok) {
+            console.log(res);
+            setUserTickets(res);
+          } else {
+            Toast.error("Não foi possível carregar os Ingressos!");
+          }
+        })
+        .catch((error) => Toast.error("Erro ao carregar os Ingressos!"));
     };
 
-    fetchUserTickets();
+    fetchTickets();
   }, []);
 
   return (
@@ -51,8 +86,11 @@ export const UserTickets = ({ navigation }) => {
             <View
               style={{ marginTop: 5, marginRight: 0, display: "flex", gap: 10 }}
             >
-              <Button text="Editar" />
-              <Button text="Deletar" type="secondary" />
+              <Button
+                text="Deletar"
+                type="secondary"
+                onPress={() => onPressDeleteTicket(ticket.id)}
+              />
             </View>
           </View>
         ))}

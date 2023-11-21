@@ -53,6 +53,7 @@ export const Login = ({ navigation }) => {
     const requestParams = JSON.stringify({
       email: fieldsValue.email,
       password: fieldsValue.password,
+      isAdmin: fieldsValue.isAdmin || false,
     });
 
     fetch("https://movie-ticket-api-v2-dev-dkrg.3.us-1.fl0.io/users/auth", {
@@ -63,7 +64,6 @@ export const Login = ({ navigation }) => {
       body: requestParams,
     })
       .then(async (response) => {
-        console.log(response);
         try {
           if (response.ok) {
             const res = await response.json();

@@ -14,13 +14,6 @@ export const styles = StyleSheet.create({
     width: "80%",
     alignSelf: "center",
   },
-  rateContainer: {
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-  },
   voteText: {
     fontSize: 14,
     color: "#fff",

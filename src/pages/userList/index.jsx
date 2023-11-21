@@ -10,6 +10,7 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Button } from "../../components/button";
 import { styles } from "./style";
+import ToastManager, { Toast } from "toastify-react-native";
 
 const UserList = ({ navigation }) => {
   const [users, setUsers] = useState([]);
@@ -27,7 +28,7 @@ const UserList = ({ navigation }) => {
 
           console.log(res);
           if (response.ok) {
-            setData(res);
+            setUsers(res);
           } else {
             Toast.error("Não foi possível carregar os Filmes!");
           }
@@ -39,7 +40,7 @@ const UserList = ({ navigation }) => {
   }, []);
 
   const handleEdit = (user) => {
-    navigation.push("UserRegister", { userId });
+    navigation.push("UserRegister", { user });
   };
 
   const handleDelete = (userId) => {
@@ -63,21 +64,6 @@ const UserList = ({ navigation }) => {
       .catch((error) => Toast.error("Erro ao deletar o usuário!"));
   };
 
-  const renderUserItem = ({ item }) => (
-    <View style={styles.userItem}>
-      <Text style={styles.userName}>{item.name}</Text>
-      <Text style={styles.userEmail}>{item.email}</Text>
-      <View style={{ display: "flex", gap: 10, marginTop: 20 }}>
-        <Button text="Editar" onPress={() => handleEdit(item)} />
-        <Button
-          text="Deletar"
-          type="secondary"
-          onPress={() => handleDelete(item.id)}
-        />
-      </View>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#000" />
@@ -85,7 +71,19 @@ const UserList = ({ navigation }) => {
         <Text style={styles.title}>Lista de Usuários</Text>
         <FlatList
           data={users}
-          renderItem={renderUserItem}
+          renderItem={({ item }) => (
+            <View style={styles.userItem}>
+              <Text style={styles.userName}>{item.email}</Text>
+              <View style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                <Button text="Editar" onPress={() => handleEdit(item)} />
+                <Button
+                  text="Deletar"
+                  type="secondary"
+                  onPress={() => handleDelete(item.id)}
+                />
+              </View>
+            </View>
+          )}
           keyExtractor={(item) => item.id.toString()}
           style={styles.userList}
         />

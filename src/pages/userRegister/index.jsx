@@ -1,4 +1,6 @@
-import { useMemo, useState, useEffect, useRoute } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
+
 import {
   SafeAreaView,
   View,
@@ -44,14 +46,9 @@ export const UserRegister = ({ navigation }) => {
       confirmField: "password",
     },
     isAdmin: {
-      condition: params.isAdminCreating,
+      condition: params?.user.isAdminCreating,
       required: true,
-      isDropdown: true,
       placeholder: "Administrador",
-      options: [
-        { title: "Sim", id: true },
-        { title: "Não", id: false },
-      ],
       initialValue: params?.user.isAdmin,
     },
   };
@@ -90,7 +87,7 @@ export const UserRegister = ({ navigation }) => {
     const paramsRest = JSON.stringify({
       email: fieldsValue.email,
       password: fieldsValue.password,
-      isAdmin: fieldsValue.isAdmin.value,
+      isAdmin: fieldsValue.isAdmin === "sim" ? true : false,
     });
 
     fetch(getUrl(), {

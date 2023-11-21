@@ -117,6 +117,7 @@ export const Fields = ({
         const fieldError = error[fieldName];
 
         if (fieldProps.isDropdown && fieldProps.condition) {
+          console.log("fieldProps", fieldProps);
           return (
             <View style={{ zIndex: 1000, width: "80%" }} key={fieldName}>
               <DropDownPicker

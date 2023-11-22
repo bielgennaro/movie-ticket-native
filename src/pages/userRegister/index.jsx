@@ -46,12 +46,6 @@ export const UserRegister = ({ navigation }) => {
       placeholder: "Confirme sua Senha",
       confirmField: "password",
     },
-    isAdmin: {
-      condition: params?.user.isAdminCreating,
-      required: true,
-      placeholder: "Administrador",
-      initialValue: params?.user.isAdmin,
-    },
   };
 
   const showToasts = (message, type) => {
@@ -88,7 +82,7 @@ export const UserRegister = ({ navigation }) => {
     const paramsRest = JSON.stringify({
       email: fieldsValue.email,
       password: fieldsValue.password,
-      isAdmin: fieldsValue.isAdmin === "sim" ? true : false,
+      isAdmin: false,
     });
 
     fetch(getUrl(), {

@@ -6,6 +6,7 @@ import ToastManager, { Toast } from "toastify-react-native";
 import { Header } from "../../components/header";
 import { Button } from "../../components/button";
 import UserContext from "../../context";
+import moment from "moment";
 
 export const UserTickets = ({ navigation }) => {
   const [userTickets, setUserTickets] = useState([]);
@@ -32,8 +33,6 @@ export const UserTickets = ({ navigation }) => {
       }
     )
       .then(async (response) => {
-        const res = await response.json();
-
         if (response.ok) {
           Toast.success("Ingresso excluído com sucesso!");
           navigation.push("Tab");
@@ -41,7 +40,10 @@ export const UserTickets = ({ navigation }) => {
           Toast.error("Não foi possível excluir o Ingresso!");
         }
       })
-      .catch((error) => Toast.error("Erro ao excluir o Ingresso!"));
+      .catch((error) => {
+        console.log(error);
+        Toast.error("Erro ao excluir o Ingresso!");
+      });
   };
 
   useEffect(() => {
@@ -79,10 +81,9 @@ export const UserTickets = ({ navigation }) => {
         <Text style={styles.title}>Meus Ingressos</Text>
         {userTickets.map((ticket, index) => (
           <View key={index} style={styles.ticketCard}>
-            <Text style={styles.ticketText}>Filme: {ticket.movie}</Text>
-            <Text style={styles.ticketText}>Data: {ticket.date}</Text>
-            <Text style={styles.ticketText}>Horário: {ticket.time}</Text>
-            <Text style={styles.ticketText}>Assento: {ticket.seat}</Text>
+            <Text style={styles.ticketText}>
+              Data: {moment().format("HH:mm", ticket.sessionDateTime)}
+            </Text>
             <View
               style={{ marginTop: 5, marginRight: 0, display: "flex", gap: 10 }}
             >

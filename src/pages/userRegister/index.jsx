@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  ScrollView,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Fields } from "../../components/fields";
@@ -122,17 +123,19 @@ export const UserRegister = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#000" />
-      <View style={styles.viewContainer}>
-        <ToastManager />
-        <Header onPress={() => navigation.goBack()} title="Cadastre-se" />
-        <MaterialIcons name="account-circle" size={200} color="#fff" />
-        <Fields
-          values={values}
-          onChangeFields={onChangeFields}
-          textButton="Entrar"
-          handleSubmit={handleSubmit}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.viewContainer}>
+          <ToastManager />
+          <Header onPress={() => navigation.goBack()} title="Cadastre-se" />
+          <MaterialIcons name="account-circle" size={200} color="#fff" />
+          <Fields
+            values={values}
+            onChangeFields={onChangeFields}
+            textButton="Entrar"
+            handleSubmit={handleSubmit}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

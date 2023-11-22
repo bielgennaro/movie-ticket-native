@@ -127,6 +127,7 @@ export const SessionRegister = ({ navigation }) => {
           navigation.push("Tab");
         } else {
           showToasts("Erro ao cadastrar Sessão!", "error");
+          navigation.push("Tab");
         }
       })
       .catch((error) => {
@@ -134,6 +135,7 @@ export const SessionRegister = ({ navigation }) => {
           "Ocorreu um erro interno, favor contate o administrador",
           "error"
         );
+        navigation.push("Tab");
       });
   };
 
